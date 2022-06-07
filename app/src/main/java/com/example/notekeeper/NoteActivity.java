@@ -1,9 +1,11 @@
 package com.example.notekeeper;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,9 +16,12 @@ import com.example.notekeeper.databinding.ActivityNoteBinding;
 import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
+    public  static  final String NOTE_INFO=".com.example.notekeeperNOTE_INFO";
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityNoteBinding binding;
+    private NoteInfo mNote;
+    private boolean mIsNewNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,22 +37,28 @@ public class NoteActivity extends AppCompatActivity {
         ArrayAdapter<CourseInfo>adapterCourses= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, courses);
         adapterCourses.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
         spinnerCourses.setAdapter(adapterCourses);
+        readDisplayStateValues();
 
 
 
+        EditText textNoteTitle=findViewById(R.id.text_note_title);
+        EditText textNoteText=findViewById(R.id.text_note_text);
+        if(!mIsNewNote)
+        displayNote(spinnerCourses,textNoteTitle,textNoteText);
+    }
 
+    private void displayNote(Spinner spinnerCourses, EditText textNoteTitle, EditText textNoteText) {
+        List<CourseInfo> courses= DataManager.getInstance().getCourses();
+        int courseIndex= courses.indexOf(mNote.getCourse());
+        spinnerCourses.setSelection(courseIndex);
+        textNoteTitle.setText(mNote.getTitle());
+        textNoteText.setText(mNote.getText());
+    }
 
-
-
-
-
-
-
-
-      /*  NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_note);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);*/
-
+    private void readDisplayStateValues() {
+        Intent intent=getIntent();
+        mNote = intent.getParcelableExtra(NOTE_INFO);
+        mIsNewNote = mNote==null;
 
     }
 
@@ -73,10 +84,5 @@ public class NoteActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /*@Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_note);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }*/
+
 }
