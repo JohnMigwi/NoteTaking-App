@@ -19,15 +19,16 @@
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityNoteListBinding binding;
+     private ArrayAdapter<NoteInfo> mAdapterNotes;
 
-    @Override
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityNoteListBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(binding. toolbar);
 
 
         FloatingActionButton fab=findViewById(R.id.fab);
@@ -38,18 +39,24 @@
         intializeDisplayContent();
     }
 
-    private void intializeDisplayContent() {
+     @Override
+     protected void onResume() {
+         super.onResume();
+         mAdapterNotes.notifyDataSetChanged();
+     }
+
+     private void intializeDisplayContent() {
         final ListView listNotes=findViewById(R.id.list_notes);
         List<NoteInfo> notes=DataManager.getInstance().getNotes();
-        ArrayAdapter<NoteInfo> adapterNotes=new ArrayAdapter<>(this, androidx.constraintlayout.widget.R.layout.support_simple_spinner_dropdown_item, notes);
-        listNotes.setAdapter(adapterNotes);
+        mAdapterNotes = new ArrayAdapter<>(this, androidx.constraintlayout.widget.R.layout.support_simple_spinner_dropdown_item, notes);
+        listNotes.setAdapter(mAdapterNotes);
 
         listNotes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long I) {
                 Intent intent=new Intent(NoteListActivity.this, NoteActivity.class);
-                NoteInfo note=(NoteInfo) listNotes.getItemAtPosition(position);
-                intent.putExtra(NoteActivity.NOTE_INFO,note);
+//                NoteInfo note=(NoteInfo) listNotes.getItemAtPosition(position);
+                intent.putExtra(NoteActivity.NOTE_POSITION,position);
 
                 startActivity(intent);
             }
