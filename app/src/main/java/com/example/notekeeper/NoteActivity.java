@@ -42,20 +42,24 @@ public class NoteActivity extends AppCompatActivity {
         ViewModelProvider viewModelProvider=new ViewModelProvider(getViewModelStore(),ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
         mViewModel=viewModelProvider.get(NoteActivityViewModel.class);
 
-        if (mViewModel.mIsNewlyCreated &&  savedInstanceState!=null)
+        if ( mViewModel.mIsNewlyCreated && savedInstanceState != null)
             mViewModel.restoreState(savedInstanceState);
+
         mViewModel.mIsNewlyCreated=false;
 
         mSpinnerCourses = findViewById(R.id.spinner_courses);
 
-        List<CourseInfo> courses=DataManager.getInstance().getCourses();
-        ArrayAdapter<CourseInfo>adapterCourses= new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, courses);
-        adapterCourses.setDropDownViewResource(androidx.appcompat.R.layout.support_simple_spinner_dropdown_item);
+        List<CourseInfo> courses = DataManager.getInstance().getCourses();
+        ArrayAdapter<CourseInfo>adapterCourses=
+                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, courses);
+        adapterCourses.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerCourses.setAdapter(adapterCourses);
 
         readDisplayStateValues();
         saveOriginalNoteValues();
 
+        mTextNoteTitle = findViewById(R.id.text_note_title);
+        mTextNoteText =findViewById(R.id.text_note_text);
 
         if(!mIsNewNote)
         displayNote(mSpinnerCourses, mTextNoteTitle, mTextNoteText);
