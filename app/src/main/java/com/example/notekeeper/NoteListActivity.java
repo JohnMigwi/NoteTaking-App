@@ -2,13 +2,11 @@
 
  import android.content.Intent;
  import android.os.Bundle;
- import android.view.View;
- import android.widget.AdapterView;
- import android.widget.ArrayAdapter;
- import android.widget.ListView;
 
  import androidx.appcompat.app.AppCompatActivity;
  import androidx.navigation.ui.AppBarConfiguration;
+ import androidx.recyclerview.widget.LinearLayoutManager;
+ import androidx.recyclerview.widget.RecyclerView;
 
  import com.example.notekeeper.databinding.ActivityNoteListBinding;
  import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -19,7 +17,8 @@
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityNoteListBinding binding;
-     private ArrayAdapter<NoteInfo> mAdapterNotes;
+     private NoteRecyclerAdapter mNoteRecyclerAdapter;
+     //private ArrayAdapter<NoteInfo> mAdapterNotes;
 
      @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +41,12 @@
      @Override
      protected void onResume() {
          super.onResume();
-         mAdapterNotes.notifyDataSetChanged();
+         mNoteRecyclerAdapter.notifyDataSetChanged();
+        // mAdapterNotes.notifyDataSetChanged();
      }
 
      private void intializeDisplayContent() {
-        final ListView listNotes=findViewById(R.id.list_notes);
+      /*  final ListView listNotes=findViewById(R.id.list_notes);
         List<NoteInfo> notes=DataManager.getInstance().getNotes();
         mAdapterNotes = new ArrayAdapter<>(this, androidx.constraintlayout.widget.R.layout.support_simple_spinner_dropdown_item, notes);
         listNotes.setAdapter(mAdapterNotes);
@@ -60,7 +60,16 @@
 
                 startActivity(intent);
             }
-        });
+        });*/
+         final RecyclerView recyclernotes=(RecyclerView) findViewById(R.id.list_notes);
+         LinearLayoutManager noteLayoutManager=new LinearLayoutManager(this);
+         recyclernotes.setLayoutManager(noteLayoutManager);
+
+         List<NoteInfo> notes=DataManager.getInstance().getNotes();
+         mNoteRecyclerAdapter = new NoteRecyclerAdapter(this, notes);
+         recyclernotes.setAdapter(mNoteRecyclerAdapter);
+
+
 
         }
     }
